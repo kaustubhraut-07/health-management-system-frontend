@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,11 +21,24 @@ const PatientsLogin = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(formData);
 
-    navigate('/other-page');
+    try{
+        const res = await axios.post('http://127.0.0.1:8000/patients', formData);
+
+        console.log(res.data);
+        if(res.status === 200){
+          navigate('/patients-appointment', {state : res.data});
+        }
+    }catch(e){
+        console.log(e);
+        
+
+    }
+
+    
   };
 
   return (
@@ -32,7 +46,7 @@ const PatientsLogin = () => {
       <h2>Patient Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Name:</label>
+          <label>Patient Name:</label>
           <input
             type="text"
             name="name"

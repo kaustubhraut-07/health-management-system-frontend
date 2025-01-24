@@ -6,6 +6,8 @@ import LandingPage from './components/LandingPage'
 import DoctorsHomepage from './components/DoctorsHomepage'
 import DoctorPatientsinfo from './components/DoctorPatientsinfo'
 import ProtectedRoute from './components/ProtectedRoute'
+import PatientsLogin from './components/PatientsLogin'
+import AppointmentBooking from './components/AppintmentBooking'
 
 const App = () => {
 
@@ -16,11 +18,18 @@ const App = () => {
       <BrowserRouter>
         <Routes>
 
+
+          <Route path='/' element={<LandingPage />}/> 
+
+          <Route path='/patients-login' element={<PatientsLogin />}/>
+          <Route path='/patients-appointment' element={<AppointmentBooking />}/>
+
+
+
           <Route path='/doctor-login' element={<DoctorLoginPage />}/>
    
        
 
-        <Route path='/' element={<LandingPage />}/>
         <Route path='/doctor-home' element={<ProtectedRoute DoctorsHomepage  />} />
         <Route path = '/doctor-patientsinfo' element={<ProtectedRoute DoctorPatientsinfo />}/>
    

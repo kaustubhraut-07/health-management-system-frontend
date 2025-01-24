@@ -21,6 +21,11 @@ const LandingPage = () => {
             </Title>
           </Col>
           <Col>
+          <Link to="/patients-login" type='button' style={{ color: '#001529', margin: 0 , paddingRight: '10px'}} >
+            {/* <Button type="primary" icon={<UserOutlined />} href="/doctor-login"> */}
+              Patients Login
+            {/* </Button>/ */}
+            </Link>
           <Link to="/doctor-login" type='button' style={{ color: '#001529', margin: 0 }} >
             {/* <Button type="primary" icon={<UserOutlined />} href="/doctor-login"> */}
               Doctor Login
@@ -60,7 +65,7 @@ const LandingPage = () => {
       
       
     </Layout>
-    <AppointmentBooking/>
+    {/* <AppointmentBooking/> */}
     </Flex>
     <Footer style={{ textAlign: 'center', background: '#f0f2f5', padding: '24px 50px' }}>
     Footer

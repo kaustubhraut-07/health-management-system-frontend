@@ -1,12 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, DatePicker, TimePicker, Button, Row, Col } from 'antd';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { InboxOutlined } from '@ant-design/icons';
+import { message, Upload } from 'antd';
+const { Dragger } = Upload;
 
 const { Option } = Select;
 
 const AppointmentBooking = () => {
   const [doctors, setDoctors] = useState([]);
   const[doctorsList , setDoctorsList] = useState([]);
+
+  const locationdata = useLocation();
+  console.log(locationdata.state , "location data");
+
+  const [formData, setFormData] = useState({
+    appoinment_time: '',
+    appoinment_day: '',
+    appoinment_status: '',
+    doctos_id: '',
+    patient_id: locationdata.state.id
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
 
   useEffect(() => {
     // Fetch the list of doctors from the API
@@ -21,8 +45,9 @@ const AppointmentBooking = () => {
 
   const onFinish = async(values) => {
     console.log('Received values:', values);
+    const dataa = {...values , patient_id : locationdata.state.id}
       try{
-        const res = await axios.post('http://127.0.0.1:8000/patients/bookappointment',values);
+        const res = await axios.post('http://127.0.0.1:8000/patients/bookappointment',dataa);
         console.log(res.data);
       }catch(error){
 
@@ -33,8 +58,9 @@ const AppointmentBooking = () => {
 
   const handleAppointmentBooking = async()=>{
     try{
+      console.log(FormData);
       const response = await axios.post('http://127.0.0.1:8000/patients/bookappointment',{
-
+        ...FormData
       });
     }catch(e){
       console.log(e);
@@ -56,6 +82,27 @@ const AppointmentBooking = () => {
   useEffect(()=>{            
     handleGetAllDoctors();
   } , [])
+
+  const props = {
+    name: 'file',
+    multiple: true,
+    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+  
 
   return (
     <div style={{ padding: '10rem', background: '#fff' }}>
@@ -108,11 +155,25 @@ const AppointmentBooking = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+      
+<Form.Item label="Upload File" name="file">
+        <Dragger {...props}>
+    <p className="ant-upload-drag-icon">
+      <InboxOutlined />
+    </p>
+    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+    <p className="ant-upload-hint">
+     Upload Sigle or multiple reports
+    </p>
+  </Dragger>
+  </Form.Item>
+  <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Book Appointment
           </Button>
         </Form.Item>
+
+        
       </Form>
     </div>
   );
